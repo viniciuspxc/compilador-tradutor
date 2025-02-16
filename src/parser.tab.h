@@ -57,12 +57,12 @@ extern int yydebug;
      LIGAR = 266,
      DESLIGAR = 267,
      MUDAR = 268,
-     LER_ANALOGICO = 269,
-     ESCREVER_ANALOGICO = 270,
-     VAR = 271,
-     ESCREVER_SERIAL = 272,
-     LER_SERIAL = 273,
-     CONSTANTE = 274,
+     VAR = 269,
+     ESCREVER_SERIAL = 270,
+     LER_SERIAL = 271,
+     CONSTANTE = 272,
+     LER_ANALOGICO = 273,
+     ESCREVER_ANALOGICO = 274,
      INTEIRO = 275,
      BOOLEANO = 276,
      TEXTO = 277,
@@ -98,7 +98,7 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 2058 of yacc.c  */
-#line 10 "parser.y"
+#line 74 "parser.y"
 
     int int_val;    /* Para NUMERO */
     char* str_val;  /* Para IDENT e STRING */
