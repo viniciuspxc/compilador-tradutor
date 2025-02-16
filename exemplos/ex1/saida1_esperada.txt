@@ -1,0 +1,46 @@
+#include <Arduino.h>
+// pinos led
+#define LED1 2
+#define LED2 4
+// pinos rgb
+#define LEDR 5
+#define LEDG 18
+#define LEDB 19
+
+void setup() {
+  pinMode(LED1, OUTPUT);
+  pinMode(LED2, OUTPUT);
+}
+
+void loop() {
+  int contador = 5;
+  while (contador> 0) {
+  digitalWrite(LED1, true);
+  digitalWrite(LED2, false);
+  delay(500);
+  digitalWrite(LED1, false);
+  digitalWrite(LED2, true);
+  delay(500);
+  contador = contador - 1;
+}
+  digitalWrite(LED1, false);
+  digitalWrite(LED2, false);
+  delay(500);
+  // ativar RGB
+  contador = 5;
+  while (contador> 0) {
+  analogWrite(LEDR, 200);
+  analogWrite(LEDG, 0);
+  analogWrite(LEDB, 200);
+  delay(500);
+  analogWrite(LEDR, 200);
+  analogWrite(LEDG, 200);
+  analogWrite(LEDB, 0);
+  delay(500);
+  analogWrite(LEDR, 0);
+  analogWrite(LEDG, 200);
+  analogWrite(LEDB, 200);
+  delay(500);
+  contador = contador - 1;
+}
+}

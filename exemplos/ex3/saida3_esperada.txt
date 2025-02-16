@@ -1,0 +1,33 @@
+#include <Arduino.h>
+#include <WiFi.h>
+#include <HTTPClient.h>
+const char* ssid = "Wokwi-GUEST";
+const char* password = "";
+const String url = "http://example.org";
+
+void setup() {
+  Serial.begin(9600);
+  Serial.print("Iniciado\n");
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+}
+}
+
+void loop() {
+    HTTPClient http;
+  http.begin(url);
+    int httpResponseCode = http.GET();
+  if (httpResponseCode > 0) {
+    Serial.print("HTTP ");
+    Serial.println(httpResponseCode);
+    String payload = http.getString();
+    Serial.println();
+    Serial.println(payload);
+  }
+  else {
+    Serial.print("Error code: ");
+    Serial.println(httpResponseCode);
+  }
+  delay(5000);
+}

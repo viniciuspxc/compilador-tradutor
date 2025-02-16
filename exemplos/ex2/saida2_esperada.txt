@@ -1,0 +1,30 @@
+#include <Arduino.h>
+#define BOTAO 16
+#define LED 18
+bool estado_botao;
+bool ultimo_estado_botao;
+
+void setup() {
+  Serial.begin(9600);
+  Serial.print("Iniciado\n");
+  pinMode(LED, OUTPUT);
+  pinMode(BOTAO, INPUT);
+  estado_botao = digitalRead(BOTAO);
+  Serial.print("Digite sua frase na serial:\n");
+}
+
+void loop() {
+  ultimo_estado_botao = estado_botao;
+  estado_botao = digitalRead(BOTAO);
+  if (estado_botao== false) {
+  if (ultimo_estado_botao== true) {
+  Serial.print("botao apertado\n frase digitada: ");
+  String frase = Serial.readString();
+  Serial.print(frase);
+  Serial.print("\n");
+  digitalWrite(LED, true);
+  delay(500);
+}
+}
+  digitalWrite(LED, false);
+}
