@@ -57,12 +57,12 @@ extern int yydebug;
      LIGAR = 266,
      DESLIGAR = 267,
      MUDAR = 268,
-     VAR = 269,
-     ESCREVER_SERIAL = 270,
-     LER_SERIAL = 271,
-     CONSTANTE = 272,
-     LER_ANALOGICO = 273,
-     ESCREVER_ANALOGICO = 274,
+     LER_ANALOGICO = 269,
+     ESCREVER_ANALOGICO = 270,
+     VAR = 271,
+     ESCREVER_SERIAL = 272,
+     LER_SERIAL = 273,
+     CONSTANTE = 274,
      INTEIRO = 275,
      BOOLEANO = 276,
      TEXTO = 277,
@@ -79,16 +79,17 @@ extern int yydebug;
      SENAO = 288,
      ENTAO = 289,
      ENQUANTO = 290,
-     TRUE = 291,
-     FALSE = 292,
-     INICIAR_HTTP = 293,
-     RECEBER_HTTP = 294,
-     NUMERO = 295,
-     IDENT = 296,
-     STRING = 297,
-     COMENTARIO = 298,
-     OPERADOR = 299,
-     OPERADOR_COMPARACAO = 300
+     DEFINIR = 291,
+     TRUE = 292,
+     FALSE = 293,
+     INICIAR_HTTP = 294,
+     RECEBER_HTTP = 295,
+     NUMERO = 296,
+     IDENT = 297,
+     STRING = 298,
+     COMENTARIO = 299,
+     OPERADOR = 300,
+     OPERADOR_COMPARACAO = 301
    };
 #endif
 
@@ -104,7 +105,7 @@ typedef union YYSTYPE
 
 
 /* Line 2058 of yacc.c  */
-#line 108 "parser.tab.h"
+#line 109 "parser.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

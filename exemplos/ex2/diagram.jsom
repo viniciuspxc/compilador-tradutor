@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "author": "Dharshini Dharshini",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-breadboard-half", "id": "bb1", "top": -223.8, "left": -26, "attrs": {} },
+    { "type": "wokwi-esp32-devkit-v1", "id": "esp", "top": -212.95, "left": -158.74, "attrs": {} },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": -140.05,
+      "left": 38.4,
+      "attrs": { "value": "220" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led1",
+      "top": -214.8,
+      "left": 61.4,
+      "attrs": { "color": "red" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn1",
+      "top": -144.1,
+      "left": 137.9,
+      "rotate": 90,
+      "attrs": { "color": "green" }
+    }
+  ],
+  "connections": [
+    [ "esp:TX0", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX0", "$serialMonitor:TX", "", [] ],
+    [ "led1:A", "bb1:10t.a", "", [ "$bb" ] ],
+    [ "led1:C", "bb1:9t.a", "", [ "$bb" ] ],
+    [ "btn1:1.l", "bb1:20t.c", "", [ "$bb" ] ],
+    [ "btn1:2.l", "bb1:18t.c", "", [ "$bb" ] ],
+    [ "btn1:1.r", "bb1:20b.h", "", [ "$bb" ] ],
+    [ "btn1:2.r", "bb1:18b.h", "", [ "$bb" ] ],
+    [ "r1:1", "bb1:5t.e", "", [ "$bb" ] ],
+    [ "r1:2", "bb1:11t.e", "", [ "$bb" ] ],
+    [ "esp:D18", "r1:1", "green", [ "h0" ] ],
+    [ "esp:GND.1", "bb1:9t.b", "black", [ "h0" ] ],
+    [ "bb1:10t.b", "r1:2", "green", [ "v0" ] ],
+    [ "esp:RX2", "btn1:2.r", "green", [ "h0" ] ],
+    [ "bb1:9t.b", "bb1:20t.b", "green", [ "v0" ] ]
+  ],
+  "dependencies": {}
+}

@@ -1,0 +1,33 @@
+incluir Arduino
+
+definir BOTAO 16
+definir LED 18
+
+var booleano: estado_botao
+var booleano: ultimo_estado_botao
+
+config
+    configurarSerial 9600
+    escreverSerial "Iniciado\n"
+    configurar LED saida
+    configurar BOTAO entrada
+    estado_botao = lerDigital BOTAO
+    escreverSerial "Digite sua frase na serial:\n"
+fim
+
+repita
+    
+    ultimo_estado_botao = estado_botao
+    estado_botao = lerDigital BOTAO
+    se estado_botao == false entao
+        se ultimo_estado_botao == true entao
+        escreverSerial "botao apertado\n frase digitada: "
+        var texto: frase = lerSerial
+        escreverSerial frase
+        escreverSerial "\n"
+        ligar LED   
+        esperar 500
+        fim
+    fim
+    desligar LED
+fim

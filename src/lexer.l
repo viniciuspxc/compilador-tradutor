@@ -22,7 +22,7 @@
 "inteiro"      { return INTEIRO; }
 "booleano"     { return BOOLEANO; }
 "texto"        { return TEXTO; }
-
+"definir" { return DEFINIR; }
 "configurar"       { return CONFIGURAR; }
 "saida"            { return SAIDA; }
 "entrada"          { return ENTRADA; }
