@@ -68,20 +68,27 @@ extern int yydebug;
      TEXTO = 277,
      SAIDA = 278,
      ENTRADA = 279,
-     IGUAL = 280,
-     DOISPONTOS = 281,
-     SE = 282,
-     SENAO = 283,
-     ENTAO = 284,
-     ENQUANTO = 285,
-     TRUE = 286,
-     FALSE = 287,
-     NUMERO = 288,
-     IDENT = 289,
-     STRING = 290,
-     COMENTARIO = 291,
-     OPERADOR = 292,
-     OPERADOR_COMPARACAO = 293
+     SSID = 280,
+     SENHA = 281,
+     HOST = 282,
+     CONECTAR_WIFI = 283,
+     CHECAR_WIFI = 284,
+     IGUAL = 285,
+     DOISPONTOS = 286,
+     SE = 287,
+     SENAO = 288,
+     ENTAO = 289,
+     ENQUANTO = 290,
+     TRUE = 291,
+     FALSE = 292,
+     INICIAR_HTTP = 293,
+     RECEBER_HTTP = 294,
+     NUMERO = 295,
+     IDENT = 296,
+     STRING = 297,
+     COMENTARIO = 298,
+     OPERADOR = 299,
+     OPERADOR_COMPARACAO = 300
    };
 #endif
 
@@ -97,7 +104,7 @@ typedef union YYSTYPE
 
 
 /* Line 2058 of yacc.c  */
-#line 101 "parser.tab.h"
+#line 108 "parser.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

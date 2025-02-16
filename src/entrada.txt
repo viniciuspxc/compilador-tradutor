@@ -1,14 +1,28 @@
 incluir WiFi
 incluir Arduino
+incluir HTTPClient
 
-// novo comentario
+// comando wifi
+ssid = "Wokwi-GUEST"
+senha = ""
+host = "servidor"
+const var texto: url = "http://example.org"
+
 // pin setup
+var booleano: nivel
 var booleano: nivel_alto = true
 const var inteiro: pinoled = 2
 const var inteiro: ledPin = 13
 const var inteiro: botao = 14
 
 config
+  conectarWifi ssid senha
+  checarWifi
+
+  iniciarHttp
+  receberHttp
+
+
   configurarSerial 9600
   esperar 500
   var inteiro: pino = 2

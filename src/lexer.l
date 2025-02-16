@@ -41,6 +41,13 @@
 "senao" { return SENAO; }
 "entao" { return ENTAO; }
 "enquanto" { return ENQUANTO; }
+"ssid" { return SSID; }
+"senha" { return SENHA; }
+"host" { return HOST; }
+"conectarWifi" { return CONECTAR_WIFI; }
+"checarWifi" { return CHECAR_WIFI; }
+"iniciarHttp" { return INICIAR_HTTP; }
+"receberHttp" { return RECEBER_HTTP; }
 
 "+"    { yylval.str_val = strdup(yytext); return OPERADOR; }
 "-"    { yylval.str_val = strdup(yytext); return OPERADOR; }

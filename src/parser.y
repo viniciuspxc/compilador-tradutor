@@ -14,9 +14,9 @@ int yylex(void);
 
 %token INCLUIR CONFIG FIM REPITA ESPERAR CONFIGURAR_SERIAL CONFIGURAR LER_DIGITAL LIGAR DESLIGAR MUDAR
 %token VAR ESCREVER_SERIAL LER_SERIAL CONSTANTE LER_ANALOGICO ESCREVER_ANALOGICO
-%token INTEIRO BOOLEANO TEXTO SAIDA ENTRADA 
+%token INTEIRO BOOLEANO TEXTO SAIDA ENTRADA SSID SENHA HOST CONECTAR_WIFI CHECAR_WIFI
 %token IGUAL DOISPONTOS SE SENAO ENTAO ENQUANTO
-%token TRUE FALSE
+%token TRUE FALSE INICIAR_HTTP RECEBER_HTTP
 %token <int_val> NUMERO
 %token <str_val> IDENT STRING COMENTARIO OPERADOR OPERADOR_COMPARACAO
 
@@ -39,6 +39,7 @@ inclusao:
     | CONSTANTE { printf("const "); } declaracao
     | declaracao
     | COMENTARIO { printf("%s\n", $1); free($1); }
+    | comando_wifi
     ;
 
 configuracao:
@@ -59,179 +60,133 @@ repeticao:
     ;
 
 comando_list:
-    comando comando_list
+    { printf("  "); } comando comando_list
     |
     ;
 
 comando:
     controle_fluxo
-    | ESPERAR NUMERO {
-        printf("  delay(%d);\n", $2);
-    }
-    | CONFIGURAR_SERIAL NUMERO { 
-        printf("  Serial.begin(%d);\n", $2);
-    }
-    | ESCREVER_SERIAL STRING {
-        printf("  Serial.print(%s);\n", $2);
-        free($2);
-    }
-    | ESCREVER_SERIAL IDENT {
-        printf("  Serial.print(%s);\n", $2);
-        free($2);
-    }
-    | CONFIGURAR IDENT SAIDA {
-        printf("  pinMode(%s, OUTPUT);\n", $2);
-        free($2);
-    }
-    | CONFIGURAR IDENT ENTRADA {
-        printf("  pinMode(%s, INPUT);\n", $2);
-        free($2);
-    }
-    | LIGAR IDENT {
-        printf("  digitalWrite(%s, true);\n", $2);
-        free($2);
-    }
-    | DESLIGAR IDENT {
-        printf("  digitalWrite(%s, false);\n", $2);
-        free($2);
-    }
-    | IDENT IGUAL LER_DIGITAL IDENT {
-        printf("  bool %s = digitalRead(%s);\n", $1, $4);
-        free($1);
-        free($4);
-    }
-    | VAR BOOLEANO DOISPONTOS IDENT IGUAL LER_DIGITAL IDENT {
-        printf("  bool %s = digitalRead(%s);\n", $4, $7);
-        free($4);
-        free($7);
-    }
-    | IDENT IGUAL LER_ANALOGICO IDENT {
-        printf("  %s = analogRead(%s);\n", $1, $4);
-        free($1);
-        free($4);
-    }
-    | VAR INTEIRO DOISPONTOS IDENT IGUAL LER_ANALOGICO IDENT {
-        printf("  int %s = analogRead(%s);\n", $4, $7);
-        free($4);
-        free($7);
-    }
-    | MUDAR IDENT IDENT {
-        printf("  digitalWrite(%s, %s);\n", $2, $3);
-        free($2);
-        free($3);
-    }
-    | ESCREVER_ANALOGICO IDENT NUMERO {
-        printf("  analogWrite(%s, %d);\n", $2, $3);
-        free($2);
-    }   
-    | ESCREVER_ANALOGICO IDENT IDENT {
-        printf("  analogWrite(%s, %s);\n", $2, $3);
-        free($2);
-        free($3);
-    }
+    | ESPERAR NUMERO 
+        { printf("delay(%d);\n", $2); }
+    | CONFIGURAR_SERIAL NUMERO 
+        { printf("Serial.begin(%d);\n", $2); }
+    | ESCREVER_SERIAL { printf("Serial.print("); } item { printf(");\n"); }
+    | CONFIGURAR IDENT { printf("pinMode(%s, ", $2); free($2); } entrada_saida { printf(");\n"); }
+    | ligar_desligar
+    | MUDAR IDENT { printf("digitalWrite(%s, ", $2); free($2); } item { printf(");\n"); }
+    | IDENT IGUAL LER_DIGITAL IDENT 
+        { printf("%s = digitalRead(%s);\n", $1, $4); free($1); free($4); }
+    | VAR BOOLEANO DOISPONTOS IDENT IGUAL LER_DIGITAL IDENT 
+        { printf("bool %s = digitalRead(%s);\n", $4, $7); free($4); free($7); }
+    | IDENT IGUAL LER_ANALOGICO IDENT 
+        { printf("%s = analogRead(%s);\n", $1, $4); free($1); free($4); }
+    | VAR INTEIRO DOISPONTOS IDENT IGUAL LER_ANALOGICO IDENT 
+        { printf("int %s = analogRead(%s);\n", $4, $7); free($4); free($7); }
+    | ESCREVER_ANALOGICO IDENT { printf("analogWrite(%s, ", $2); free($2); } item { printf(");\n"); }
     | declaracao
     | atribuicao
     | COMENTARIO { printf("%s\n", $1); free($1); }
+    | comando_wifi
+    | comando_http
+    ;
+
+comando_http:
+    INICIAR_HTTP { printf("  HTTPClient http;\n  http.begin(url);\n"); }
+    | RECEBER_HTTP { printf(
+                            "  int httpResponseCode = http.GET();\n"
+                            "  if (httpResponseCode > 0) {\n"
+                            "    Serial.print(\"HTTP \");\n"
+                            "    Serial.println(httpResponseCode);\n"
+                            "    String payload = http.getString();\n"
+                            "    Serial.println();\n"
+                            "    Serial.println(payload);\n"
+                            "  }\n"
+                            "  else {\n"
+                            "    Serial.print(\"Error code: \");\n"
+                            "    Serial.println(httpResponseCode);\n"
+                            "  }\n");
+     }
+    ;
+
+comando_wifi:
+    SSID IGUAL STRING { printf("const char* ssid = %s;\n", $3); free($3); }
+    | SENHA IGUAL STRING { printf("const char* password = %s;\n", $3); free($3); }
+    | HOST IGUAL STRING { printf("const char* host = %s;\n", $3); free($3); }
+    | CONECTAR_WIFI SSID SENHA { printf("WiFi.begin(ssid, password);\n"); }
+    | CHECAR_WIFI { printf("while (WiFi.status() != WL_CONNECTED) {\n    delay(500);\n}\n"); }
+    ;
+entrada_saida:
+    ENTRADA { printf("INPUT"); }
+    | SAIDA { printf("OUTPUT"); }
+    ;
+
+ligar_desligar:
+    LIGAR { printf("digitalWrite("); } item { printf(", true);\n"); }
+    | DESLIGAR { printf("digitalWrite("); } item { printf(", false);\n"); }
+    ;
+
+item:
+    IDENT { printf("%s", $1); free($1); }
+    | NUMERO { printf("%d", $1); }
+    | TRUE { printf("true"); }
+    | FALSE { printf("false"); }
+    | STRING { printf("%s", $1); free($1); }
+    ;
+
+
+expressao:
+    item
+    | item OPERADOR {
+        printf(" %s ", $2);
+        free($2);
+    } item
+    ;
+
+atribuicao:
+    IDENT IGUAL { printf("%s = ", $1); free($1); } expressao { printf(";\n"); }
+    | VAR TEXTO DOISPONTOS IDENT IGUAL LER_SERIAL {
+        printf("String %s = Serial.readString();\n", $4);
+        free($4);
+    }
     ;
 
 declaracao:
     VAR INTEIRO DOISPONTOS IDENT { 
-        printf("  int %s;\n", $4);
-        free($4);
+        printf("int %s;\n", $4); 
+        free($4); 
     }
     | VAR BOOLEANO DOISPONTOS IDENT { 
-        printf("  bool %s;\n", $4);
-        free($4);
+        printf("bool %s;\n", $4); 
+        free($4); 
     }
     | VAR TEXTO DOISPONTOS IDENT { 
-        printf("  String %s;\n", $4);
-        free($4);
+        printf("String %s;\n", $4); 
+        free($4); 
     }
-    | VAR INTEIRO DOISPONTOS IDENT IGUAL NUMERO { 
-        printf("  int %s = %d;\n", $4, $6);
+    | VAR INTEIRO DOISPONTOS IDENT IGUAL { 
+        printf("int %s = ", $4);
         free($4);
-    }
-    | VAR BOOLEANO DOISPONTOS IDENT IGUAL TRUE { 
-        printf("  bool %s = true;\n", $4);
+    } expressao { printf(";\n"); }
+    | VAR BOOLEANO DOISPONTOS IDENT IGUAL { 
+        printf("bool %s = ", $4);
         free($4);
-    }
-    | VAR BOOLEANO DOISPONTOS IDENT IGUAL FALSE { 
-        printf("  bool %s = false;\n", $4);
+    } expressao { printf(";\n"); }
+    | VAR TEXTO DOISPONTOS IDENT IGUAL { 
+        printf("String %s = ", $4);
         free($4);
-    }
-    | VAR TEXTO DOISPONTOS IDENT IGUAL STRING { 
-        printf("  String %s = %s;\n", $4, $6);
-        free($4);
-    }
+    } expressao { printf(";\n"); }
     ;
 
-atribuicao:
-    IDENT IGUAL NUMERO { 
-        printf("  %s = %d;\n", $1, $3);
-        free($1);
-    }
-    | IDENT IGUAL TRUE { 
-        printf("  %s = true;\n", $1);
-        free($1);
-    }
-    | IDENT IGUAL FALSE { 
-        printf("  %s = false;\n", $1);
-        free($1);
-    }
-    | IDENT IGUAL STRING { 
-        printf("  %s = %s;\n", $1, $3);
-        free($1);
-        free($3);
-    }
-    | IDENT IGUAL IDENT { 
-        printf("  %s = %s;\n", $1, $3);
-        free($1);
-        free($3);
-    }
-    | VAR TEXTO DOISPONTOS IDENT IGUAL LER_SERIAL {
-        printf("  String %s = Serial.readString();\n", $4);
-        free($4);
-    }
-    | IDENT IGUAL IDENT OPERADOR NUMERO {
-        printf("  %s = %s %s %d\n", $1, $3, $4, $5);
-        free($1);
-        free($3);
-        free($4);
-    }
-    | IDENT IGUAL IDENT OPERADOR IDENT {
-        printf("  %s = %s %s %s\n", $1, $3, $4, $5);
-        free($1);
-        free($3);
-        free($4);
-        free($5);
-    }
-    | IDENT IGUAL NUMERO OPERADOR NUMERO {
-        printf("  %s = %d %s %d\n", $1, $3, $4, $5);
-        free($1);
-        free($4);
-    }
-    | IDENT IGUAL NUMERO OPERADOR IDENT {
-        printf("  %s = %d %s %s\n", $1, $3, $4, $5);
-        free($1);
-        free($4);
-        free($5);
-    }
-    ;
 
 controle_fluxo:
-    SE  {printf("if ");} condicao ENTAO {printf("{\n");}
+    SE {printf("if ");} condicao ENTAO {printf("{\n");}
     comando_list fim_fluxo
-    | ENQUANTO condicao {printf("while ");} {printf(" {\n");} comando_list fim_fluxo
+    | ENQUANTO {printf("while ");} condicao {printf("{\n");} comando_list fim_fluxo
     ;
 
 condicao:
-    IDENT OPERADOR_COMPARACAO NUMERO {
-        printf("(%s %s %d)", $1, $2, $3);
-        free($1);
-    }
-    | IDENT OPERADOR_COMPARACAO IDENT {
-        printf("(%s %s %s)", $1, $2, $3);
-        free($1);
+    { printf("(");} item OPERADOR_COMPARACAO { printf("%s ", $3);} item {
+        printf(") ");
         free($3);
     }
     ;
