@@ -32,20 +32,18 @@ void appendOutput(const char *fmt, ...) {
 void yyerror(const char *s);
 int yylex(void);
 
-/* --- Estruturas para analise semantica --- */
 typedef enum { TYPE_INT, TYPE_BOOL, TYPE_TEXT } VarType;
 
 typedef struct Symbol {
     char *name;
     VarType type;
-    int isConst;             /* 1 se for constante, 0 se variavel */
+    int isConst;
     struct Symbol *next;
 } Symbol;
 
 Symbol *symbolTable = NULL;
-int currentConst = 0;  /* Flag para identificar declaracao constante */
+int currentConst = 0;
 
-/* Procura um simbolo na tabela */
 Symbol* lookupSymbol(const char *name) {
     Symbol *s = symbolTable;
     while (s != NULL) {
@@ -56,7 +54,6 @@ Symbol* lookupSymbol(const char *name) {
     return NULL;
 }
 
-/* Insere um novo simbolo na tabela. Emite erro se ja existir. */
 void insertSymbol(const char *name, VarType type, int isConst) {
     if(lookupSymbol(name) != NULL) {
         fprintf(stderr, "Erro semantico: Redeclaracao da variavel '%s'\n", name);
@@ -72,14 +69,14 @@ void insertSymbol(const char *name, VarType type, int isConst) {
 %}
 
 %union {
-    int int_val;    /* Para NUMERO */
-    char* str_val;  /* Para IDENT e STRING */
+    int int_val;
+    char* str_val;
 }
 
 %token INCLUIR CONFIG FIM REPITA ESPERAR CONFIGURAR_SERIAL CONFIGURAR LER_DIGITAL LIGAR DESLIGAR MUDAR
 %token VAR ESCREVER_SERIAL LER_SERIAL CONSTANTE LER_ANALOGICO ESCREVER_ANALOGICO
 %token INTEIRO BOOLEANO TEXTO SAIDA ENTRADA SSID SENHA HOST CONECTAR_WIFI CHECAR_WIFI
-%token IGUAL DOISPONTOS SE SENAO ENTAO ENQUANTO DEFINIR 
+%token IGUAL DOISPONTOS SE SENAO ENTAO ENQUANTO DEFINIR HEADERFILE
 %token TRUE FALSE INICIAR_HTTP RECEBER_HTTP
 %token <int_val> NUMERO
 %token <str_val> IDENT STRING COMENTARIO OPERADOR OPERADOR_COMPARACAO
@@ -97,6 +94,10 @@ inclusao_list:
 
 inclusao:
     INCLUIR IDENT { 
+        printf("#include <%s>\n", $2);  
+        free($2);
+    }
+    | INCLUIR IDENT HEADERFILE { 
         printf("#include <%s.h>\n", $2);  
         free($2);
     }
@@ -202,7 +203,6 @@ ligar_desligar:
 
 item:
     IDENT { 
-        /*verificar se a variavel foi declarada */
         if(lookupSymbol($1) == NULL) {
             yyerror("Variavel nao declarada em ESCREVER_SERIAL");
             exit(1);

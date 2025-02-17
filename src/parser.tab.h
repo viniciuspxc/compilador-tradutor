@@ -80,16 +80,17 @@ extern int yydebug;
      ENTAO = 289,
      ENQUANTO = 290,
      DEFINIR = 291,
-     TRUE = 292,
-     FALSE = 293,
-     INICIAR_HTTP = 294,
-     RECEBER_HTTP = 295,
-     NUMERO = 296,
-     IDENT = 297,
-     STRING = 298,
-     COMENTARIO = 299,
-     OPERADOR = 300,
-     OPERADOR_COMPARACAO = 301
+     HEADERFILE = 292,
+     TRUE = 293,
+     FALSE = 294,
+     INICIAR_HTTP = 295,
+     RECEBER_HTTP = 296,
+     NUMERO = 297,
+     IDENT = 298,
+     STRING = 299,
+     COMENTARIO = 300,
+     OPERADOR = 301,
+     OPERADOR_COMPARACAO = 302
    };
 #endif
 
@@ -98,14 +99,14 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 2058 of yacc.c  */
-#line 74 "parser.y"
+#line 71 "parser.y"
 
-    int int_val;    /* Para NUMERO */
-    char* str_val;  /* Para IDENT e STRING */
+    int int_val;
+    char* str_val;
 
 
 /* Line 2058 of yacc.c  */
-#line 109 "parser.tab.h"
+#line 110 "parser.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

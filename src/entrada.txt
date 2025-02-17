@@ -1,50 +1,23 @@
-incluir Arduino
-
-// pinos led
-definir LED1 2
-definir LED2 4
-
-// pinos rgb
-definir LEDR 5
-definir LEDG 18
-definir LEDB 19
+incluir biblioteca.h
+incluir iostream
+const var texto: exemplo = "exemplo"
+var booleano: nivel
+var inteiro: alto = 2
 
 config
-    configurar LED1 saida
-    configurar LED2 saida
+  configurarSerial 9600
 fim
 
 repita
-    var inteiro: contador = 5
-    enquanto contador > 0
-      ligar LED1
-      desligar LED2
-      esperar 500
-      desligar LED1
-      ligar LED2
-      esperar 500
-      contador = contador - 1
-    fim
-    desligar LED1
-    desligar LED2
-    esperar 500
+  esperar 500
+  alto = 1
+  se alto == 1 entao
+    esperar 5
 
-    // ativar RGB
-    contador = 5
-    enquanto contador > 0
-      escreverAnalogico LEDR 200
-      escreverAnalogico LEDG 0
-      escreverAnalogico LEDB 200
-      esperar 500
-      escreverAnalogico LEDR 200
-      escreverAnalogico LEDG 200
-      escreverAnalogico LEDB 0
-      esperar 500
-      escreverAnalogico LEDR 0
-      escreverAnalogico LEDG 200
-      escreverAnalogico LEDB 200
-      esperar 500
-      contador = contador - 1
-    fim
+  fim
+
+  enquanto alto > 1
+    esperar 1
+  fim
 fim
 

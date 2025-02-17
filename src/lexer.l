@@ -3,6 +3,7 @@
 %}
 
 %%
+".h" { return HEADERFILE; }
 
 "\""([^"\n]|\"\")*"\"" { 
     yylval.str_val = strdup(yytext); // Captura a string completa com aspas
@@ -31,16 +32,19 @@
 "lerDigital"       { return LER_DIGITAL; }
 "lerAnalogico"     { return LER_ANALOGICO; }
 "escreverAnalogico"     { return ESCREVER_ANALOGICO; }
+
 "mudar"            { return MUDAR; }
 "configurarSerial" { return CONFIGURAR_SERIAL; }
 "escreverSerial"   { return ESCREVER_SERIAL; }
 "lerSerial"        { return LER_SERIAL; }
 "="                 { return IGUAL; }
 ":"                 { return DOISPONTOS; }
+
 "se" { return SE; }
 "senao" { return SENAO; }
 "entao" { return ENTAO; }
 "enquanto" { return ENQUANTO; }
+
 "ssid" { return SSID; }
 "senha" { return SENHA; }
 "host" { return HOST; }
